@@ -52,7 +52,7 @@ public class ItemRepositoryImpl implements ItemRepository {
         }
         Item oldItem = items.get(itemId);
         if (oldItem.getOwner().getId() != userId) {
-            throw new WrongUserException("Этот пользователь не может редактировать вещь с Id: "+ itemId);
+            throw new WrongUserException("Этот пользователь не может редактировать вещь с Id: " + itemId);
         }
         if (item.getName() != null) {
             oldItem.setName(item.getName());
