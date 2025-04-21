@@ -8,6 +8,7 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserRepository;
+import ru.practicum.shareit.user.dto.UserMapper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,16 +33,16 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public Item addItem(long userId, ItemDto itemDto) {
+    public ItemDto addItem(long userId, ItemDto itemDto) {
         userRepository.getById(userId);
         Item item = new Item();
         item.setId(getNextId());
         item.setName(itemDto.getName());
         item.setDescription(itemDto.getDescription());
         item.setAvailable(itemDto.getAvailable());
-        item.setOwner(userRepository.getById(userId));
+        item.setOwner(UserMapper.toUser(userRepository.getById(userId)));
         items.put(item.getId(), item);
-        return item;
+        return ItemMapper.toItemDto(item);
     }
 
     @Override

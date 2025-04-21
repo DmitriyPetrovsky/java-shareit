@@ -4,53 +4,61 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exception.DoubleEmailException;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
-    private Map<Long, User> users = new HashMap<>();
+    private final Map<Long, User> users = new HashMap<>();
     private long id;
 
 
     @Override
-    public List<User> getAll() {
-        return new ArrayList<>(users.values());
+    public List<UserDto> getAll() {
+        return users.values().stream()
+                .map(UserMapper::toUserDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public User getById(long id) {
+    public UserDto getById(long id) {
         if (!users.containsKey(id)) {
             throw new NotFoundException("Пользователь с id " + id + " не найден.");
         }
-        return users.get(id);
+        return UserMapper.toUserDto(users.get(id));
     }
 
     @Override
-    public User addUser(User user) {
-        checkDuplicateEmail(user);
+    public UserDto addUser(UserDto userDto) {
+        checkDuplicateEmail(userDto);
+        User user = new User();
         user.setId(getNextId());
+        user.setName(userDto.getName());
+        user.setEmail(userDto.getEmail());
         users.put(user.getId(), user);
-        return user;
+        return UserMapper.toUserDto(user);
     }
 
     @Override
-    public User updateUser(User user) {
-        if (!users.containsKey(user.getId())) {
-            throw new NotFoundException("Пользователь с ID: " + user.getId() + " не найден.");
+    public UserDto updateUser(UserDto userDto) {
+        if (!users.containsKey(userDto.getId())) {
+            throw new NotFoundException("Пользователь с ID: " + userDto.getId() + " не найден.");
         }
-        User oldUser = users.get(user.getId());
-        if (user.getEmail() != null) {
-            checkDuplicateEmail(user);
-            oldUser.setEmail(user.getEmail());
+        User oldUser = users.get(userDto.getId());
+        if (userDto.getEmail() != null) {
+            checkDuplicateEmail(userDto);
+            oldUser.setEmail(userDto.getEmail());
         }
-        if (user.getName() != null) {
-            oldUser.setName(user.getName());
+        if (userDto.getName() != null) {
+            oldUser.setName(userDto.getName());
         }
         users.put(oldUser.getId(), oldUser);
-        return oldUser;
+        return UserMapper.toUserDto(oldUser);
     }
 
     @Override
@@ -65,10 +73,10 @@ public class UserRepositoryImpl implements UserRepository {
         return id++;
     }
 
-    private void checkDuplicateEmail(User user) {
-        String email = user.getEmail();
+    private void checkDuplicateEmail(UserDto userDto) {
+        String email = userDto.getEmail();
         boolean noEmailExists = users.values().stream()
-                .allMatch(u -> !u.getEmail().equals(email));
+                .noneMatch(u -> u.getEmail().equals(email));
         if (!noEmailExists) {
             throw new DoubleEmailException("Указанный email уже есть в списке.");
         }
