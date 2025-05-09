@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Создание пользователя</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+
+        .form-container {
+            width: 300px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            overflow: auto;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+
+        .user-info {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            box-sizing: border-box;
+        }
+
+        .user-info p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <h2>Регистрация пользователя</h2>
+    <form>
+        <input type="text" id="name" placeholder="Имя">
+        <input type="email" id="email" placeholder="Email">
+        <button type="button" onclick="createUser()">Создать пользователя</button>
+    </form>
+
+    <div class="user-info" style="display: none;">
+        <p><strong>ID:</strong> <span id="user-id"></span></p>
+        <p><strong>Имя:</strong> <span id="user-name"></span></p>
+        <p><strong>Email:</strong> <span id="user-email"></span></p>
+    </div>
+</div>
+
+<script>
+    function createUser() {
+        // Получаем значения из полей ввода
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+
+        // Создаем JSON-объект
+        const userData = {
+            name: name,
+            email: email
+        };
+
+        // Отправляем данные на сервер
+        fetch('/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Пользователь создан:', data);
+
+                // Отображаем информацию о пользователе
+                document.getElementById('user-id').textContent = data.id;
+                document.getElementById('user-name').textContent = data.name;
+                document.getElementById('user-email').textContent = data.email;
+
+                // Показываем блок с информацией
+                document.querySelector('.user-info').style.display = 'block';
+
+                // Скрываем форму
+                document.querySelector('.form-container form').style.display = 'none';
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                alert('Произошла ошибка при создании пользователя');
+            });
+    }
+</script>
+</body>
+</html>

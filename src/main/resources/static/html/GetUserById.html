@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль пользователя</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .user-info {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .user-info h2 {
+            margin-top: 0;
+        }
+        .user-info p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="user-info">
+    <h2>Информация о пользователе</h2>
+    <p><strong>ID:</strong> <span id="user-id"></span></p>
+    <p><strong>Имя:</strong> <span id="user-name"></span></p>
+    <p><strong>Email:</strong> <span id="user-email"></span></p>
+</div>
+
+<script>
+    // Получаем ID пользователя из URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = urlParams.get('id');
+
+    // Проверяем, что ID передан
+    if (!userId) {
+        alert('Не указан ID пользователя');
+        document.body.innerHTML = '<p>Ошибка: не указан ID пользователя</p>';
+        return;
+    }
+
+    // Отправляем GET-запрос на сервер
+    fetch(`/users/${userId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Ошибка: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(user => {
+            // Заполняем данные пользователя на странице
+            document.getElementById('user-id').textContent = user.id;
+            document.getElementById('user-name').textContent = user.name;
+            document.getElementById('user-email').textContent = user.email;
+        })
+        .catch(error => {
+            console.error('Ошибка при получении данных:', error);
+            document.body.innerHTML = `<p>Произошла ошибка: ${error.message}</p>`;
+        });
+</script>
+</body>
+</html>
