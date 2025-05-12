@@ -47,4 +47,9 @@ public class ItemController {
         return itemService.searchItem(text);
     }
 
+    @PostMapping("/{itemId}/comment")
+    public ItemDto addComment(@PathVariable long itemId,
+                              @RequestBody @Valid ItemDto itemDto,
+                              @RequestHeader("X-Sharer-User-Id") long userId) {}
+
 }
