@@ -6,19 +6,30 @@ import lombok.Data;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Data
-@Table(name="comments")
+@Table(name = "comments")
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
-    String text;
+    private long id;
+    private String text;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
-    User author;
+    private User author;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id", nullable = false)
-    Item item;
+    private Item item;
+
+    @Column(name = "created_at")
+    private LocalDateTime created;
+
+    @PrePersist
+    protected void onCreate() {
+        created = LocalDateTime.now();
+    }
+
 
 }

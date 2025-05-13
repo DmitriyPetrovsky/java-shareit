@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS booking (
                                      item_id INTEGER NOT NULL,
                                      booker_id INTEGER NOT NULL,
                                      status varchar(10) NOT NULL,
-                                     created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                                     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
                                      CONSTRAINT pk_booking PRIMARY KEY (id),
                                      CONSTRAINT fk_booking_item FOREIGN KEY (item_id) REFERENCES items(id),
                                      CONSTRAINT fk_booking_user FOREIGN KEY (booker_id) REFERENCES users(id),
