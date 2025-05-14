@@ -1,2 +1,4 @@
-# java-shareit
-Template repository for Shareit project.
+# Спринт 15: ShareIt: работа с базой данных.
+
+### Схема базы данных:
+![Схематичное изображение базы данных](shareit.png)
