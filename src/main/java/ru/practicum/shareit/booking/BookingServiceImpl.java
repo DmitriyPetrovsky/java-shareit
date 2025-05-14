@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoResponse;
+import ru.practicum.shareit.booking.enums.State;
 import ru.practicum.shareit.booking.enums.Status;
 import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.ItemRepository;
@@ -14,9 +15,9 @@ import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -84,53 +85,36 @@ public class BookingServiceImpl implements BookingService {
         throw new ForbiddenUserException("Этот пользователь не может просматривать запрашиваемое бронирование");
     }
 
-    public List<BookingDtoResponse> getBookings(long userId, String state) {
+    public List<BookingDtoResponse> getBookings(long userId, State state) {
         checkUserExists(userId);
         List<Booking> bookings = bookingRepository.findByBooker_Id(userId);
         return filterState(bookings, state);
     }
 
-    public List<BookingDtoResponse> getCurrentUserBookings(long userId, String state) {
+    public List<BookingDtoResponse> getCurrentUserBookings(long userId, State state) {
         checkUserExists(userId);
         List<Booking> bookings = bookingRepository.findByItemOwnerIdOrderByStartDesc(userId);
         return filterState(bookings, state);
     }
 
 
-    private List<BookingDtoResponse> filterState(List<Booking> bookings, String state) {
+    private List<BookingDtoResponse> filterState(List<Booking> bookings, State state) {
         LocalDateTime now = LocalDateTime.now();
-        return switch (state) {
-            case "ALL" -> bookings.stream()
-                    .map(this::toBookingDtoResponse)
-                    .sorted(Comparator.comparing(BookingDtoResponse::getStart))
-                    .collect(Collectors.toList());
-            case "CURRENT" -> bookings.stream()
-                    .filter(b -> b.getStart().isBefore(now) && b.getEnd().isAfter(now))
-                    .map(this::toBookingDtoResponse)
-                    .sorted(Comparator.comparing(BookingDtoResponse::getStart))
-                    .collect(Collectors.toList());
-            case "PAST" -> bookings.stream()
-                    .filter(b -> b.getEnd().isBefore(now))
-                    .map(this::toBookingDtoResponse)
-                    .sorted(Comparator.comparing(BookingDtoResponse::getStart))
-                    .collect(Collectors.toList());
-            case "FUTURE" -> bookings.stream()
-                    .filter(b -> b.getStart().isAfter(now))
-                    .map(this::toBookingDtoResponse)
-                    .sorted(Comparator.comparing(BookingDtoResponse::getStart))
-                    .collect(Collectors.toList());
-            case "WAITING" -> bookings.stream()
-                    .filter(b -> b.getStatus() == Status.WAITING)
-                    .map(this::toBookingDtoResponse)
-                    .sorted(Comparator.comparing(BookingDtoResponse::getStart))
-                    .collect(Collectors.toList());
-            case "REJECTED" -> bookings.stream()
-                    .filter(b -> b.getStatus() == Status.REJECTED)
-                    .map(this::toBookingDtoResponse)
-                    .sorted(Comparator.comparing(BookingDtoResponse::getStart))
-                    .collect(Collectors.toList());
-            default -> new ArrayList<>();
+
+        Predicate<Booking> filter = switch (state) {
+            case ALL -> b -> true;
+            case CURRENT -> b -> b.getStart().isBefore(now) && b.getEnd().isAfter(now);
+            case PAST -> b -> b.getEnd().isBefore(now);
+            case FUTURE -> b -> b.getStart().isAfter(now);
+            case WAITING -> b -> b.getStatus() == Status.WAITING;
+            case REJECTED -> b -> b.getStatus() == Status.REJECTED;
         };
+
+        return bookings.stream()
+                .filter(filter)
+                .map(this::toBookingDtoResponse)
+                .sorted(Comparator.comparing(BookingDtoResponse::getStart))
+                .collect(Collectors.toList());
     }
 
     private BookingDtoResponse toBookingDtoResponse(Booking booking) {

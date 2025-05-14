@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoResponse;
+import ru.practicum.shareit.booking.enums.State;
 
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class BookingController {
     }
 
     @GetMapping
-    public List<BookingDtoResponse> getBookings(@RequestParam(required = false, defaultValue = "ALL") String state,
+    public List<BookingDtoResponse> getBookings(@RequestParam(required = false, defaultValue = "ALL") State state,
                                         @RequestHeader("X-Sharer-User-Id") long userId) {
         log.info("Получен запрос на список бронирований пользователя ID: {}", userId);
         return bookingService.getBookings(userId, state);
@@ -49,7 +50,7 @@ public class BookingController {
 
     @GetMapping("/owner")
     public List<BookingDtoResponse> getCurrentUserBookings(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                   @RequestParam(required = false, defaultValue = "ALL") String state) {
+                                                   @RequestParam(required = false, defaultValue = "ALL") State state) {
         log.info("Получен запрос на список бронирования вещей пользователя ID {}", userId);
         return bookingService.getCurrentUserBookings(userId, state);
     }

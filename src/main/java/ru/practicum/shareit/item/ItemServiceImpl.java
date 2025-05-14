@@ -103,15 +103,13 @@ public class ItemServiceImpl implements ItemService {
 
     private Item dtoToItem(ItemDto itemDto) {
         Item item = new Item();
-        Optional<User> user = userRepository.findById(itemDto.getOwnerId());
-        if (user.isEmpty()) {
-            throw new NotFoundException("Пользователь с ID: " + itemDto.getOwnerId() + " не найден!");
-        }
-        item.setOwner(user.get());
+        User user = userRepository.findById(itemDto.getOwnerId())
+                .orElseThrow( () -> new NotFoundException("Пользователь с ID: " + itemDto.getOwnerId()
+                        + " не найден!"));
+        item.setOwner(user);
         item.setName(itemDto.getName());
         item.setDescription(itemDto.getDescription());
         item.setAvailable(itemDto.getAvailable());
-        //item.setRequest(requestRepository.findById(itemDto)
         return item;
     }
 

@@ -1,15 +1,18 @@
 package ru.practicum.shareit.booking;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import ru.practicum.shareit.booking.enums.Status;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "booking")
 public class Booking {
     @Id
@@ -27,4 +30,31 @@ public class Booking {
     private User booker;
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Booking booking = (Booking) o;
+        if (id == 0 && booking.id == 0) {
+            return Objects.equals(start, booking.start) &&
+                    Objects.equals(end, booking.end) &&
+                    Objects.equals(item, booking.item) &&
+                    Objects.equals(booker, booking.booker) &&
+                    status == booking.status;
+        }
+        return id == booking.id;
+    }
+
+    @Override
+    public int hashCode() {
+        if (id == 0) {
+            return Objects.hash(start, end, item, booker, status);
+        }
+        return Objects.hash(id);
+    }
 }
