@@ -19,7 +19,6 @@ import ru.practicum.shareit.user.model.User;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -104,7 +103,7 @@ public class ItemServiceImpl implements ItemService {
     private Item dtoToItem(ItemDto itemDto) {
         Item item = new Item();
         User user = userRepository.findById(itemDto.getOwnerId())
-                .orElseThrow( () -> new NotFoundException("Пользователь с ID: " + itemDto.getOwnerId()
+                .orElseThrow(() -> new NotFoundException("Пользователь с ID: " + itemDto.getOwnerId()
                         + " не найден!"));
         item.setOwner(user);
         item.setName(itemDto.getName());
