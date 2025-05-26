@@ -14,6 +14,7 @@ import java.util.List;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    /*
     @ExceptionHandler(BindException.class)
     public ResponseEntity<List<ErrorResponse>> handleValidationException(BindException e) {
         List<ErrorResponse> errors = new ArrayList<>();
@@ -24,6 +25,18 @@ public class GlobalExceptionHandler {
             errors.add(new ErrorResponse(String.format("Поле %s %s", fieldName, errorMessage)));
         });
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+     */
+
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<ErrorResponse> handleValidationException(BindException e) {
+        FieldError err = e.getFieldErrors().stream()
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Validation error without field errors"));
+        String fieldName = err.getField();
+        String errorMessage = err.getDefaultMessage();
+        ErrorResponse error = new ErrorResponse(String.format("Поле %s %s", fieldName, errorMessage));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
     @ExceptionHandler

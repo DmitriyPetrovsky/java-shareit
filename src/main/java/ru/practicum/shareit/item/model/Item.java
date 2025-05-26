@@ -32,6 +32,8 @@ public class Item {
     private Booking nextBooking;
     @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
     private List<Comment> comments;
+    @Column(name = "request_id")
+    private Long requestId;
 
     @Override
     public boolean equals(Object o) {

@@ -11,7 +11,7 @@ import ru.practicum.shareit.item.model.Item;
 public class ItemMapper {
 
     public static ItemDto toItemDto(Item item) {
-        return new ItemDto(
+        ItemDto itemDto = new ItemDto(
                 item.getId(),
                 item.getName(),
                 item.getDescription(),
@@ -19,8 +19,10 @@ public class ItemMapper {
                 item.getOwner().getId(),
                 item.getLastBooking() != null ? BookingMapper.toBookingDto(item.getLastBooking()) : null,
                 item.getNextBooking() != null ? BookingMapper.toBookingDto(item.getNextBooking()) : null,
-                item.getComments() != null ? CommentMapper.toDtoList(item.getComments()) : null
+                item.getComments() != null ? CommentMapper.toDtoList(item.getComments()) : null,
+                item.getRequestId()
         );
+        return itemDto;
     }
 
 }
