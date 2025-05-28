@@ -102,7 +102,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
 
-    private List<BookingDtoResponse> filterState(List<Booking> bookings, State state) {
+    public List<BookingDtoResponse> filterState(List<Booking> bookings, State state) {
         LocalDateTime now = LocalDateTime.now();
 
         Predicate<Booking> filter = switch (state) {

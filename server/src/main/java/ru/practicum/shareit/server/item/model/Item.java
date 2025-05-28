@@ -1,7 +1,9 @@
 package ru.practicum.shareit.server.item.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.practicum.shareit.server.booking.Booking;
 import ru.practicum.shareit.server.item.comment.Comment;
@@ -14,6 +16,8 @@ import java.util.Objects;
 @Getter
 @Setter
 @Table(name = "items")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
