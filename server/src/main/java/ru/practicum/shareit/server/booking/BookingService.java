@@ -1,0 +1,23 @@
+package ru.practicum.shareit.server.booking;
+
+
+
+import ru.practicum.shareit.server.booking.dto.BookingDto;
+import ru.practicum.shareit.server.booking.dto.BookingDtoResponse;
+import ru.practicum.shareit.server.booking.enums.State;
+
+import java.util.List;
+
+public interface BookingService {
+
+    BookingDtoResponse book(BookingDto bookingDto);
+
+    BookingDtoResponse approve(long bookingId, long userId, boolean approved);
+
+    BookingDtoResponse getBookingById(long bookingId, long userId);
+
+    List<BookingDtoResponse> getBookings(long userId, State state);
+
+    List<BookingDtoResponse> getCurrentUserBookings(long userId, State state);
+
+}
