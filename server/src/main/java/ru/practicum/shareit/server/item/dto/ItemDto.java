@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ItemDto {
-    long id;
+    private long id;
     private String name;
     private String description;
     private Boolean available;

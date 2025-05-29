@@ -4,14 +4,13 @@ package ru.practicum.shareit.gateway.user;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.gateway.user.dto.UserDto;
 
 
 
-@Controller
+@RestController
 @RequestMapping(path = "/users")
 @Slf4j
 @Validated

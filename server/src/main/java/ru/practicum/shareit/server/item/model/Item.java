@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.practicum.shareit.server.booking.Booking;
 import ru.practicum.shareit.server.item.comment.Comment;
+import ru.practicum.shareit.server.request.model.ItemRequest;
 import ru.practicum.shareit.server.user.model.User;
 
 import java.util.List;
@@ -34,8 +35,9 @@ public class Item {
     private Booking nextBooking;
     @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
     private List<Comment> comments;
-    @Column(name = "request_id")
-    private Long requestId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "request_id")
+    private ItemRequest request;
 
     @Override
     public boolean equals(Object o) {

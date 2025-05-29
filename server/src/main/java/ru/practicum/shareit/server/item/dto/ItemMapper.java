@@ -20,7 +20,7 @@ public class ItemMapper {
                 item.getLastBooking() != null ? BookingMapper.toBookingDto(item.getLastBooking()) : null,
                 item.getNextBooking() != null ? BookingMapper.toBookingDto(item.getNextBooking()) : null,
                 item.getComments() != null ? CommentMapper.toDtoList(item.getComments()) : null,
-                item.getRequestId()
+                item.getRequest() != null ? item.getId() : null
         );
         return itemDto;
     }

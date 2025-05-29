@@ -15,9 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class ItemRequestDto {
-    long id;
-    long requestorId;
-    String description;
-    List<ItemResponse> items;
-    LocalDateTime created;
+    private long id;
+    private long requestorId;
+    private String description;
+    private List<ItemResponse> items;
+    private LocalDateTime created;
 }

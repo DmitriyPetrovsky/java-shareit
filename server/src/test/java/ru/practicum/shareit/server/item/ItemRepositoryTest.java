@@ -54,7 +54,7 @@ class ItemRepositoryTest {
         item1.setDescription("Аккумуляторная дрель");
         item1.setAvailable(true);
         item1.setOwner(owner1);
-        item1.setRequestId(request.getId());
+        item1.setRequest(request);
         em.persist(item1);
 
         item2 = new Item();
@@ -104,8 +104,8 @@ class ItemRepositoryTest {
     @Test
     void findItemsByRequestId_shouldReturnItemsWithRequestId() {
         assertNotNull(request.getId());
-        assertNotNull(item1.getRequestId());
-        assertEquals(request.getId(), item1.getRequestId());
+        assertNotNull(item1.getRequest());
+        assertEquals(request, item1.getRequest());
         List<Item> items = itemRepository.findItemsByRequestId(request.getId());
         assertEquals(1, items.size());
         assertEquals(item1.getId(), items.get(0).getId());

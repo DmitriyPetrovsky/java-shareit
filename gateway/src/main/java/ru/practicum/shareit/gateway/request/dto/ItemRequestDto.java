@@ -13,10 +13,10 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 public class ItemRequestDto {
-    long id;
-    long requestorId;
+    private long id;
+    private long requestorId;
     @NotBlank
-    String description;
-    List<ItemResponse> items;
-    LocalDateTime created;
+    private String description;
+    private List<ItemResponse> items;
+    private LocalDateTime created;
 }

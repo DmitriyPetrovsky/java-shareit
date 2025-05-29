@@ -13,6 +13,7 @@ import ru.practicum.shareit.server.item.comment.CommentRepository;
 import ru.practicum.shareit.server.item.dto.ItemDto;
 import ru.practicum.shareit.server.item.dto.ItemMapper;
 import ru.practicum.shareit.server.item.model.Item;
+import ru.practicum.shareit.server.request.ItemRequestRepository;
 import ru.practicum.shareit.server.user.UserRepository;
 import ru.practicum.shareit.server.user.model.User;
 
@@ -29,6 +30,7 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final BookingRepository bookingRepository;
+    private final ItemRequestRepository itemRequestRepository;
 
     @Override
     public List<ItemDto> getItemsByUserId(long userId) {
@@ -110,7 +112,9 @@ public class ItemServiceImpl implements ItemService {
         item.setName(itemDto.getName());
         item.setDescription(itemDto.getDescription());
         item.setAvailable(itemDto.getAvailable());
-        item.setRequestId(itemDto.getRequestId());
+        if (itemDto.getRequestId() != null) {
+            item.setRequest(itemRequestRepository.findById(itemDto.getRequestId()).orElse(null));
+        }
         return item;
     }
 

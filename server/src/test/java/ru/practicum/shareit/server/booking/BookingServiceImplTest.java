@@ -47,6 +47,7 @@ class BookingServiceImplTest {
 
     @Test
     void book_shouldCreateBookingWhenAllConditionsMet() {
+        assertNotNull(item.getOwner());
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(booker));
         when(itemRepository.findById(anyLong())).thenReturn(Optional.of(item));
         when(bookingRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
